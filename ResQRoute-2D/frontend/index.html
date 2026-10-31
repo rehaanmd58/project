@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResQRoute 2D – Smart Emergency Vehicle Corridor Simulation</title>
+    <meta name="description" content="Interactive 2D educational simulation of smart emergency vehicle corridors, dynamic traffic signal preemption, and real-time route optimization." />
+    <meta property="og:title" content="ResQRoute 2D – Smart Emergency Vehicle Corridor Simulation" />
+    <meta property="og:description" content="Interactive 2D educational simulation of smart emergency vehicle corridors, dynamic traffic signal preemption, and real-time route optimization." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js for Traffic Analytics & Results -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Core Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/simulation.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+  </head>
+  <body>
+    <div id="app-container">
+      <!-- Sidebar Navigation -->
+      <aside class="app-sidebar">
+        <div class="sidebar-header">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              <path d="M12 5v14"/>
+            </svg>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">ResQRoute 2D</span>
+            <span class="brand-subtitle">Smart Corridor Lab</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a href="#dashboard" class="nav-link active" data-nav-target="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="9" rx="1"/>
+              <rect x="14" y="3" width="7" height="5" rx="1"/>
+              <rect x="14" y="12" width="7" height="9" rx="1"/>
+              <rect x="3" y="16" width="7" height="5" rx="1"/>
+            </svg>
+            <span>Home Dashboard</span>
+          </a>
+
+          <a href="#configuration" class="nav-link" data-nav-target="configuration">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>Configuration</span>
+          </a>
+
+          <a href="#simulation" class="nav-link" data-nav-target="simulation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <span>2D City Simulation</span>
+          </a>
+
+          <a href="#routes" class="nav-link" data-nav-target="routes">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="6" cy="19" r="3"/>
+              <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/>
+              <circle cx="18" cy="5" r="3"/>
+            </svg>
+            <span>Route Optimization</span>
+          </a>
+
+          <a href="#analytics" class="nav-link" data-nav-target="analytics">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            <span>Traffic Analytics</span>
+          </a>
+
+          <a href="#results" class="nav-link" data-nav-target="results">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <span>Simulation Results</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="system-status-box">
+            <div class="status-indicator">
+              <span class="status-dot"></span>
+              <span>Simulation Engine Ready</span>
+            </div>
+            <div class="status-label">Local Demo Mode Active · 60 FPS</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main App Shell -->
+      <main class="app-main">
+        <!-- Top Navigation Bar -->
+        <header class="app-topbar">
+          <div class="topbar-left">
+            <div class="page-title-badge">
+              <span id="topbar-page-name">Home Dashboard</span>
+            </div>
+            <div class="topbar-breadcrumbs">
+              <span>Traffic Control Room</span>
+              <span>/</span>
+              <span>Virtual Testbed</span>
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div class="live-clock" id="live-control-clock">00:00:00</div>
+            
+            <button class="btn btn-secondary btn-sm" id="btn-toggle-theme" title="Toggle Day / Night Simulation View">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <span id="theme-toggle-label">Night View</span>
+            </button>
+
+            <button class="btn btn-primary btn-sm" id="btn-quick-run" onclick="window.location.hash='simulation'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <span>Quick Run</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- =====================================================================
+             VIEW A: HOME DASHBOARD
+             ===================================================================== -->
+        <section id="view-dashboard" class="page-view active">
+          <!-- Hero Banner -->
+          <div class="dashboard-hero">
+            <div class="hero-content">
+              <div class="hero-title">
+                <span>ResQRoute 2D</span>
+                <span class="badge-educational">Educational Sandbox</span>
+              </div>
+              <p class="hero-description">
+                Interactive smart emergency vehicle corridor simulation. Evaluate how ambulances, fire engines, and police patrol units traverse congested urban street grids using real-time shortest-path route optimization and automated traffic signal preemption.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary" id="btn-dashboard-start-sim">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  <span>Configure & Start Simulation</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-dashboard-view-sim">
+                  <span>View Live 2D Map</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI Metric Cards Grid -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Total Vehicles</span>
+                <div class="metric-icon-box blue">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="kpi-total-vehicles">20</div>
+              <div class="metric-subtext">Active simulated traffic agents</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Emergency Vehicles</span>
+                <div class="metric-icon-box red">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="kpi-emergency-vehicles">1</div>
+              <div class="metric-subtext">Priority corridor active</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Active Intersections</span>
+                <div class="metric-icon-box emerald">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                    <path d="M2 12h20"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="kpi-active-intersections">4</div>
+              <div class="metric-subtext">Nodes A, B, C, D synchronized</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Traffic Density</span>
+                <div class="metric-icon-box amber">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="kpi-traffic-density">45%</div>
+              <div class="metric-subtext">Moderate corridor load</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-label">Average Speed</span>
+                <div class="metric-icon-box cyan">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="kpi-avg-speed">52 px/s</div>
+              <div class="metric-subtext">Flowing traffic conditions</div>
+            </div>
+          </div>
+
+          <!-- Two-Column Layout: Mini Preview & Traffic Status Overview -->
+          <div class="dashboard-layout">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">2D City Simulation Live Preview</h3>
+                  <p class="card-subtitle">Real-time top-down overview of city grid intersections A, B, C, D</p>
+                </div>
+                <button class="btn btn-outline-cyan btn-sm" onclick="window.location.hash='simulation'">
+                  Open Full Simulator
+                </button>
+              </div>
+              <div class="mini-preview-container">
+                <canvas id="mini-preview-canvas" class="mini-preview-canvas"></canvas>
+                <div class="mini-preview-overlay">
+                  <span>Interactive Map Preview · Intersections A, B, C, D</span>
+                  <span style="color: #38bdf8;">Click Open Simulator to Interact</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Traffic Status Overview</h3>
+                  <p class="card-subtitle">Corridor junction throughput & status</p>
+                </div>
+              </div>
+              <div class="traffic-overview-list">
+                <div class="traffic-status-item">
+                  <div class="status-item-left">
+                    <strong style="color: #38bdf8;">Intersection A</strong>
+                    <span>Downtown Hub</span>
+                  </div>
+                  <span class="status-badge green">Green Wave Safe</span>
+                </div>
+                <div class="traffic-status-item">
+                  <div class="status-item-left">
+                    <strong style="color: #38bdf8;">Intersection B</strong>
+                    <span>Medical District</span>
+                  </div>
+                  <span class="status-badge green">Corridor Preempted</span>
+                </div>
+                <div class="traffic-status-item">
+                  <div class="status-item-left">
+                    <strong style="color: #38bdf8;">Intersection C</strong>
+                    <span>Civic Center</span>
+                  </div>
+                  <span class="status-badge amber">Normal Cycle (Moderate)</span>
+                </div>
+                <div class="traffic-status-item">
+                  <div class="status-item-left">
+                    <strong style="color: #38bdf8;">Intersection D</strong>
+                    <span>Industrial Park</span>
+                  </div>
+                  <span class="status-badge green">Normal Cycle (Clear)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Simulation History Table -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Recent Simulation Runs</h3>
+                <p class="card-subtitle">Historical performance metrics and scenario comparison records</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="window.location.hash='results'">
+                View Full Results
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Simulation ID</th>
+                    <th>Time</th>
+                    <th>Vehicle</th>
+                    <th>Corridor</th>
+                    <th>Scenario</th>
+                    <th>Travel Time</th>
+                    <th>Stops</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-history-tbody">
+                  <!-- Populated dynamically by dashboard.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             VIEW B: SIMULATION CONFIGURATION
+             ===================================================================== -->
+        <section id="view-configuration" class="page-view">
+          <div class="card" style="max-width: 880px; margin: 0 auto;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title" style="font-size: 20px;">Simulation Configuration</h2>
+                <p class="card-subtitle">Set parameters for emergency vehicle response, origin, destination, and urban traffic density</p>
+              </div>
+            </div>
+
+            <form id="config-form" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 24px;">
+              <!-- 1. Emergency Vehicle Type -->
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px; color: var(--text-primary);">
+                  1. Select Emergency Vehicle Type
+                </label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                  <button type="button" class="btn btn-secondary active" data-config-vehicle="ambulance" style="padding: 16px; justify-content: flex-start; text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <img src="/assets/vehicles/ambulance.svg" width="32" height="32" alt="Ambulance" />
+                      <div>
+                        <div style="font-weight: 700;">Ambulance</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">Max 95 px/s · High Priority</div>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button type="button" class="btn btn-secondary" data-config-vehicle="fire_engine" style="padding: 16px; justify-content: flex-start; text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <img src="/assets/vehicles/fire_truck.svg" width="32" height="32" alt="Fire Engine" />
+                      <div>
+                        <div style="font-weight: 700;">Fire Engine</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">Max 82 px/s · Heavy Tender</div>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button type="button" class="btn btn-secondary" data-config-vehicle="police" style="padding: 16px; justify-content: flex-start; text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <img src="/assets/vehicles/police.svg" width="32" height="32" alt="Police Car" />
+                      <div>
+                        <div style="font-weight: 700;">Police Vehicle</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">Max 100 px/s · Fast Patrol</div>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 2 & 3. Starting Intersection and Destination -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                  <label for="config-start-node" style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px;">
+                    2. Starting Intersection (Origin)
+                  </label>
+                  <select id="config-start-node" class="btn btn-secondary" style="width: 100%; padding: 10px 14px; font-size: 13px; appearance: auto;">
+                    <option value="A" selected>Intersection A (Downtown Hub)</option>
+                    <option value="B">Intersection B (Medical District)</option>
+                    <option value="C">Intersection C (Civic Center)</option>
+                    <option value="D">Intersection D (Industrial Park)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="config-dest-node" style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px;">
+                    3. Destination Intersection
+                  </label>
+                  <select id="config-dest-node" class="btn btn-secondary" style="width: 100%; padding: 10px 14px; font-size: 13px; appearance: auto;">
+                    <option value="A">Intersection A (Downtown Hub)</option>
+                    <option value="B">Intersection B (Medical District)</option>
+                    <option value="C">Intersection C (Civic Center)</option>
+                    <option value="D" selected>Intersection D (Industrial Park)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Validation Error Box -->
+              <div id="config-validation-error" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;">
+                Starting intersection and destination must be different.
+              </div>
+
+              <!-- 4 & 5. Traffic Density & Number of Normal Vehicles Slider -->
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <label style="font-weight: 600; font-size: 13px;">4. Traffic Density Preset</label>
+                  <div class="segmented-control">
+                    <button type="button" class="segmented-btn" data-config-density="low">Low</button>
+                    <button type="button" class="segmented-btn active" data-config-density="medium">Medium</button>
+                    <button type="button" class="segmented-btn" data-config-density="high">High</button>
+                  </div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+                    <span>5. Number of Normal Vehicles: <strong id="config-vehicles-val" class="tabular-nums" style="color: #38bdf8;">20</strong></span>
+                    <span style="color: var(--text-muted);">Range: 5 to 50 vehicles</span>
+                  </div>
+                  <input type="range" id="config-num-vehicles" min="5" max="50" value="20" style="width: 100%; accent-color: var(--accent-blue);" />
+                </div>
+              </div>
+
+              <!-- 6. Simulation Speed -->
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px;">
+                  6. Simulation Speed
+                </label>
+                <div class="segmented-control" style="width: fit-content;">
+                  <button type="button" class="segmented-btn active" data-config-speed="1">1x Normal</button>
+                  <button type="button" class="segmented-btn" data-config-speed="2">2x Accelerated</button>
+                  <button type="button" class="segmented-btn" data-config-speed="3">3x High Speed</button>
+                </div>
+              </div>
+
+              <!-- 7. Simulation Scenario -->
+              <div>
+                <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px;">
+                  7. Simulation Scenario
+                </label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                  <label style="display: flex; align-items: flex-start; gap: 10px; padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="config-scenario" value="priority" checked style="margin-top: 3px; accent-color: #10b981;" />
+                    <div>
+                      <div style="font-weight: 700; color: #34d399;">Scenario B: Emergency Priority</div>
+                      <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                        Adaptive preemption holds cross traffic and grants continuous green-wave corridor.
+                      </div>
+                    </div>
+                  </label>
+
+                  <label style="display: flex; align-items: flex-start; gap: 10px; padding: 14px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: 8px; cursor: pointer;">
+                    <input type="radio" name="config-scenario" value="normal" style="margin-top: 3px; accent-color: #ef4444;" />
+                    <div>
+                      <div style="font-weight: 700; color: #f87171;">Scenario A: Normal Traffic</div>
+                      <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                        Regular fixed signal cycles. Emergency vehicles must halt at red signals in queue.
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="window.location.hash='dashboard'">
+                  Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-config-start-sim" style="padding: 10px 24px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  <span>Start Simulation</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             VIEW C: 2D CITY SIMULATION ENVIRONMENT (CORE CANVAS)
+             ===================================================================== -->
+        <section id="view-simulation" class="page-view">
+          <div class="simulation-viewport-card">
+            <!-- HUD Top Bar -->
+            <div class="sim-hud-topbar">
+              <div class="sim-hud-left">
+                <button class="btn btn-primary btn-sm" id="btn-sim-start">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  <span>Start</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-sim-pause">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16"/>
+                    <rect x="14" y="4" width="4" height="16"/>
+                  </svg>
+                  <span>Pause</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-sim-reset">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                  </svg>
+                  <span>Reset</span>
+                </button>
+              </div>
+
+              <div class="sim-hud-center">
+                <span style="font-size: 12px; color: var(--text-muted); margin-right: 4px;">Speed:</span>
+                <div class="segmented-control">
+                  <button class="segmented-btn active" data-hud-speed="1">1x</button>
+                  <button class="segmented-btn" data-hud-speed="2">2x</button>
+                  <button class="segmented-btn" data-hud-speed="3">3x</button>
+                </div>
+              </div>
+
+              <div class="sim-hud-right">
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="chk-show-route" checked style="accent-color: #10b981;" />
+                  <span>Show Route Corridor</span>
+                </label>
+
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="chk-show-labels" checked style="accent-color: #38bdf8;" />
+                  <span>Intersection Labels</span>
+                </label>
+
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="chk-normal-vehicles" checked style="accent-color: #3b82f6;" />
+                  <span>Normal Traffic</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Canvas Stage Area -->
+            <div class="canvas-stage-wrapper">
+              <!-- Priority Corridor Alert Overlay -->
+              <div id="corridor-priority-alert" class="corridor-alert-overlay">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                <span id="corridor-alert-text">EMERGENCY CORRIDOR ACTIVE – PREEMPTING SIGNALS</span>
+              </div>
+
+              <!-- Main HTML5 Simulation Canvas -->
+              <canvas id="city-canvas"></canvas>
+
+              <!-- Floating Zoom & Reset View Controls -->
+              <div class="canvas-floating-controls">
+                <button class="float-btn" id="btn-canvas-zoom-in" title="Zoom In">+</button>
+                <button class="float-btn" id="btn-canvas-zoom-out" title="Zoom Out">−</button>
+                <button class="float-btn" id="btn-canvas-reset-view" title="Reset View" style="font-size: 12px;">⟲</button>
+              </div>
+
+              <!-- Vehicle & Traffic Light Legend Overlay Panel -->
+              <div class="sim-legend-panel">
+                <div class="legend-title">Simulation Legend</div>
+                <div class="legend-items-list">
+                  <div class="legend-item">
+                    <span class="legend-color-chip chip-ambulance"></span>
+                    <span>Ambulance</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-chip chip-fire"></span>
+                    <span>Fire Engine</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-chip chip-police"></span>
+                    <span>Police Cruiser</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-chip chip-car"></span>
+                    <span>Standard Cars</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-chip chip-bus"></span>
+                    <span>Transit Buses</span>
+                  </div>
+                  <div class="legend-item" style="margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border-subtle);">
+                    <span class="legend-color-chip chip-signal-green"></span>
+                    <span>Green Signal</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-chip chip-signal-red"></span>
+                    <span>Red Signal</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Simulation Bottom Telemetry Strip -->
+            <div class="sim-telemetry-bar">
+              <div class="telemetry-item">
+                <span>Active Vehicles:</span>
+                <span id="hud-active-vehicles" class="telemetry-val">20</span>
+              </div>
+              <div class="telemetry-item">
+                <span>Average Speed:</span>
+                <span id="hud-avg-speed" class="telemetry-val">52 px/s</span>
+              </div>
+              <div class="telemetry-item">
+                <span>Emergency Travel Time:</span>
+                <span id="hud-emergency-travel-time" class="telemetry-val">0.0s</span>
+              </div>
+              <div class="telemetry-item">
+                <span>Intersections Stopped:</span>
+                <span id="hud-emergency-stops" class="telemetry-val">0</span>
+              </div>
+              <div class="telemetry-item">
+                <button class="btn btn-secondary btn-sm" onclick="window.location.hash='analytics'">
+                  Open Real-Time Analytics →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             VIEW D: ROUTE OPTIMIZATION PAGE
+             ===================================================================== -->
+        <section id="view-routes" class="page-view">
+          <div style="max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2 class="card-title" style="font-size: 20px;">Emergency Route Optimization</h2>
+                  <p class="card-subtitle">Graph-based shortest & lowest-congestion route planning using Dijkstra and A* cost models</p>
+                </div>
+              </div>
+
+              <!-- Route Origin / Destination Selectors -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                <div>
+                  <label for="routes-start-node" style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Origin Intersection</label>
+                  <select id="routes-start-node" class="btn btn-secondary" style="width: 100%; padding: 8px 12px; appearance: auto;">
+                    <option value="A" selected>Intersection A (Downtown Hub)</option>
+                    <option value="B">Intersection B (Medical District)</option>
+                    <option value="C">Intersection C (Civic Center)</option>
+                    <option value="D">Intersection D (Industrial Park)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="routes-dest-node" style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Destination Intersection</label>
+                  <select id="routes-dest-node" class="btn btn-secondary" style="width: 100%; padding: 8px 12px; appearance: auto;">
+                    <option value="A">Intersection A (Downtown Hub)</option>
+                    <option value="B">Intersection B (Medical District)</option>
+                    <option value="C">Intersection C (Civic Center)</option>
+                    <option value="D" selected>Intersection D (Industrial Park)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="routes-vehicle-type" style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Vehicle Type</label>
+                  <select id="routes-vehicle-type" class="btn btn-secondary" style="width: 100%; padding: 8px 12px; appearance: auto;">
+                    <option value="ambulance" selected>Rapid Ambulance</option>
+                    <option value="fire_engine">Fire Engine</option>
+                    <option value="police">Police Cruiser</option>
+                  </select>
+                </div>
+
+                <div style="display: flex; align-items: flex-end;">
+                  <button class="btn btn-primary" id="btn-calculate-routes" style="width: 100%; height: 38px;">
+                    Calculate Corridors
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Calculated Candidate Routes Cards Container -->
+            <div id="routes-cards-container">
+              <!-- Dynamically rendered by route-planner.js -->
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             VIEW E: TRAFFIC ANALYTICS PAGE (4 INTERACTIVE CHART.JS CHARTS)
+             ===================================================================== -->
+        <section id="view-analytics" class="page-view">
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Real-Time Metrics Strip -->
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <span class="metric-label">Total Vehicles</span>
+                <div class="metric-value" id="analytics-total-vehicles">20</div>
+                <div class="metric-subtext">Active agents in city</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Normal Vehicles</span>
+                <div class="metric-value" id="analytics-normal-vehicles">19</div>
+                <div class="metric-subtext">Background traffic</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Emergency Vehicles</span>
+                <div class="metric-value" id="analytics-emergency-vehicles" style="color: #f87171;">1</div>
+                <div class="metric-subtext">Priority unit in transit</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Average Speed</span>
+                <div class="metric-value" id="analytics-avg-speed">52 px/s</div>
+                <div class="metric-subtext">Grid average velocity</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Average Wait Time</span>
+                <div class="metric-value" id="analytics-avg-wait">2.4 s</div>
+                <div class="metric-subtext">Intersection delay</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Traffic Density</span>
+                <div class="metric-value" id="analytics-density">45%</div>
+                <div class="metric-subtext">Road occupancy ratio</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Active Intersections</span>
+                <div class="metric-value" id="analytics-active-intersections">4</div>
+                <div class="metric-subtext">Signals A, B, C, D</div>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Conflicts Avoided</span>
+                <div class="metric-value" id="analytics-conflicts" style="color: #34d399;">0</div>
+                <div class="metric-subtext">Safety clearance events</div>
+              </div>
+            </div>
+
+            <!-- 4 Chart.js Visualizers Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 20px;">
+              <!-- Chart 1: Vehicle Count Over Time -->
+              <div class="card" style="height: 340px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 8px;">
+                  <div>
+                    <h3 class="card-title">1. Vehicle Count Time Series</h3>
+                    <p class="card-subtitle">Live tracking of normal vs emergency units on the city grid</p>
+                  </div>
+                </div>
+                <div style="flex: 1; position: relative;">
+                  <canvas id="chart-vehicle-count"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 2: Traffic Density by Road Segment -->
+              <div class="card" style="height: 340px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 8px;">
+                  <div>
+                    <h3 class="card-title">2. Traffic Density by Corridor</h3>
+                    <p class="card-subtitle">Congestion saturation on primary arterials A-B, B-D, D-C, C-A</p>
+                  </div>
+                </div>
+                <div style="flex: 1; position: relative;">
+                  <canvas id="chart-traffic-density"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 3: Average Waiting Time by Intersection -->
+              <div class="card" style="height: 340px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 8px;">
+                  <div>
+                    <h3 class="card-title">3. Average Waiting Time per Intersection</h3>
+                    <p class="card-subtitle">Comparative delay between normal cycle and priority corridor</p>
+                  </div>
+                </div>
+                <div style="flex: 1; position: relative;">
+                  <canvas id="chart-waiting-time"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 4: Travel Time Breakdown -->
+              <div class="card" style="height: 340px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 8px;">
+                  <div>
+                    <h3 class="card-title">4. Emergency Travel Time Differential</h3>
+                    <p class="card-subtitle">Proportion of time saved through green corridor preemption</p>
+                  </div>
+                </div>
+                <div style="flex: 1; position: relative;">
+                  <canvas id="chart-travel-time"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+             VIEW F: SIMULATION RESULTS PAGE (SCENARIO A VS SCENARIO B)
+             ===================================================================== -->
+        <section id="view-results" class="page-view">
+          <div style="max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+            <!-- Header Summary Card -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2 class="card-title" style="font-size: 20px;">Simulation Scenario Comparison Results</h2>
+                  <p class="card-subtitle">Empirical comparison between Regular Traffic Signal Timing (Scenario A) and Emergency Corridor Priority (Scenario B)</p>
+                </div>
+                <button class="btn btn-primary" id="btn-download-csv-report">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  <span>Download CSV Report</span>
+                </button>
+              </div>
+
+              <!-- Key Comparison Cards (Side-by-Side) -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
+                <!-- Scenario A Box -->
+                <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                    <h4 style="font-size: 15px; font-weight: 700; color: #f87171;">Scenario A: Normal Signals</h4>
+                    <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Standard Timing</span>
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Emergency Travel Time:</span>
+                      <strong id="results-time-a" class="tabular-nums" style="color: #ffffff;">44.8s</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Total Waiting Time:</span>
+                      <strong id="results-wait-a" class="tabular-nums" style="color: #f87171;">17.2s</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Number of Stops:</span>
+                      <strong id="results-stops-a" class="tabular-nums">3</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Intersection Conflict Count:</span>
+                      <strong id="results-conflicts-a" class="tabular-nums" style="color: #f87171;">4</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Scenario B Box -->
+                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                    <h4 style="font-size: 15px; font-weight: 700; color: #34d399;">Scenario B: Corridor Priority</h4>
+                    <span style="font-size: 11px; color: #34d399; text-transform: uppercase; font-weight: 600;">Automated Preemption</span>
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Emergency Travel Time:</span>
+                      <strong id="results-time-b" class="tabular-nums" style="color: #34d399;">22.6s</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Total Waiting Time:</span>
+                      <strong id="results-wait-b" class="tabular-nums" style="color: #34d399;">1.4s</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Number of Stops:</span>
+                      <strong id="results-stops-b" class="tabular-nums" style="color: #34d399;">0</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="color: var(--text-secondary);">Intersection Conflict Count:</span>
+                      <strong id="results-conflicts-b" class="tabular-nums" style="color: #34d399;">0</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Calculated Delta Strip -->
+              <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; padding: 16px; background: var(--bg-tertiary); border-radius: 10px;">
+                <div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Calculated Time Saved</div>
+                  <div id="results-time-saved" style="font-size: 24px; font-weight: 700; font-family: var(--font-mono); color: #34d399;">22.2s</div>
+                </div>
+                <div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Improvement Percentage</div>
+                  <div id="results-improvement-percent" style="font-size: 24px; font-weight: 700; font-family: var(--font-mono); color: #38bdf8;">+49.6%</div>
+                </div>
+                <div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Corridor Route Evaluated</div>
+                  <div id="results-route-name" style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-top: 4px;">Downtown Hub (A) → Industrial Park (D)</div>
+                </div>
+                <div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Route Distance & Density</div>
+                  <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-top: 4px;">
+                    <span id="results-distance">780 m</span> · <span id="results-congestion">Medium (45%)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Simulation Analysis Narrative -->
+              <div style="margin-top: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                <p id="results-summary-narrative">
+                  Simulation indicates simulated corridor signal priority successfully preempted intersection conflict phases, yielding 22.2 seconds in travel time reduction (49.6% efficiency gain) and reducing intermediate complete stops from 3 down to 0.
+                </p>
+              </div>
+            </div>
+
+            <!-- Comparison Bar Chart Card -->
+            <div class="card" style="height: 380px; display: flex; flex-direction: column;">
+              <div class="card-header" style="margin-bottom: 8px;">
+                <div>
+                  <h3 class="card-title">Scenario Comparison Bar Chart</h3>
+                  <p class="card-subtitle">Direct side-by-side metric comparison between Scenario A and Scenario B</p>
+                </div>
+              </div>
+              <div style="flex: 1; position: relative;">
+                <canvas id="chart-scenario-comparison"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Master Application Bootstrapper -->
+    <script type="module">
+      import { App } from '/js/app.js';
+      window.addEventListener('DOMContentLoaded', () => {
+        const app = new App();
+        app.init();
+        window.__RESQROUTE_APP__ = app;
+      });
+    </script>
+  </body>
+</html>

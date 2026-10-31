@@ -1,0 +1,52 @@
+/* ==========================================================================
+   ResQRoute 2D – Responsive Stylesheet
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .canvas-stage-wrapper {
+    height: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  #app-container {
+    flex-direction: column;
+  }
+
+  .app-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .nav-link {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .canvas-stage-wrapper {
+    height: 420px;
+  }
+
+  .sim-legend-panel {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 20px;
+  }
+}

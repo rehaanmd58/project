@@ -1,0 +1,6 @@
+{
+  "name": "ResQRoute 2D",
+  "description": "Smart Emergency Vehicle Corridor Simulation with 2D Canvas traffic grid, route optimization, and traffic signal priority.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
